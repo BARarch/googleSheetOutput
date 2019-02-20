@@ -14,24 +14,24 @@ def build_service():
                                 discoveryServiceUrl=discoveryUrl)
     return service
 
-def get(SheetId):
+def get(spreadSheetId):
     service = build_service()
 
-    request = service.spreadsheets().get(spreadsheetId=SheetId, includeGridData=True)
+    request = service.spreadsheets().get(spreadsheetId=spreadSheetId, includeGridData=True)
     result = request.execute()
     return result
 
-def get_properties(SheetId):
+def get_properties(spreadSheetId):
     service = build_service()
 
-    request = service.spreadsheets().get(spreadsheetId=SheetId, includeGridData=True, fields='sheets.properties')
+    request = service.spreadsheets().get(spreadsheetId=spreadSheetId, includeGridData=True, fields='sheets.properties')
     result = request.execute()
     return result
 
-def get_columnMetadata(SheetId):
+def get_columnMetadata(spreadSheetId):
     service = build_service()
 
-    request = service.spreadsheets().get(spreadsheetId=SheetId, includeGridData=True, fields='sheets.data.columnMetadata')
+    request = service.spreadsheets().get(spreadsheetId=spreadSheetId, includeGridData=True, fields='sheets.data.columnMetadata')
     result = request.execute()
     return result
 
@@ -39,17 +39,17 @@ class SheetOutput():
     
     get_credentials =  modelInit()
     
-    def __init__(self, sheetId, tagName, lastColumn):
+    def __init__(self, spreadSheetId='1fy9PTQ46kCn9L9woPtamT2YDdi6oaU0QEYP74QUNsjA', sheetName='TestTab', lastColumn='AA'):
         self.service = build_service()
-        self.sheetId = sheetId
-        self.tagName = tagName
+        self.spreadSheetId = spreadSheetId
+        self.sheetName = sheetName
         self.lastColumn = lastColumn
         self.content = self.read_all_rows()
 
     def read_all_rows(self):
-        tabName = self.tagName
+        tabName = self.sheetName
         lastColumn = self.lastColumn
-        spreadsheetId = self.sheetId
+        spreadsheetId = self.spreadSheetId
         rangeName = tabName + '!A1:' + lastColumn
         result = self.service.spreadsheets().values().get(
             spreadsheetId=spreadsheetId, range=rangeName).execute()
@@ -69,9 +69,9 @@ class SheetOutput():
         return self.content[1:]
 
     def output_single_row(self, row=['Hello', 'World'], rowNum=1):
-        spreadsheet_id = self.sheetId
+        spreadsheet_id = self.spreadSheetId
         value_input_option = 'RAW'
-        rangeName = self.tagName + '!A' + str(rowNum)
+        rangeName = self.sheetName + '!A' + str(rowNum)
         #print(rangeName)
         values = [row]
         body = {
@@ -86,14 +86,14 @@ class SheetOutput():
             print(str(e))
             result = e
         else:
-            print('Row Written To {}'.format(self.tagName))
+            print('Row Written To {}'.format(self.sheetName))
 
         return result 
     
     def output_rows(self, rows, col, rowNumber):
-        spreadsheet_id = self.sheetId
+        spreadsheet_id = self.spreadSheetId
         value_input_option = 'RAW'
-        rangeName = self.tagName + '!' + col + str(rowNumber)
+        rangeName = self.sheetName + '!' + col + str(rowNumber)
         values = rows
         body = {
               'values': values
@@ -107,12 +107,12 @@ class SheetOutput():
             print(e)
             return
         else:
-            print('{} rows were output to {}'.format(str(len(rows)), self.tagName))
+            print('{} rows were output to {}'.format(str(len(rows)), self.sheetName))
 
         return result
 
     def add_sheet(self, sheetTitle='Test'):
-        spreadsheet_id = self.sheetId
+        spreadsheet_id = self.spreadSheetId
         body = {
               "requests":   [
                                 {
