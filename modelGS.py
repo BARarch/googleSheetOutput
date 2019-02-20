@@ -19,14 +19,14 @@ def get_credentials():
     # at ~/.credentials/sheets.googleapis.com-python-quickstart.json
     SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
     CLIENT_SECRET_FILE = 'client_secret.json'
-    APPLICATION_NAME = 'NFL-Parse'
+    APPLICATION_NAME = 'sheet-output'
 
     home_dir = os.path.expanduser('~')
     credential_dir = os.path.join(home_dir, '.credentials')
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     credential_path = os.path.join(credential_dir,
-                                   'sheets.googleapis.NFL-Parse.json')
+                                   'sheets.googleapis.sheet-output.json')
 
     store = Storage(credential_path)
     credentials = store.get()
