@@ -7,6 +7,8 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 
+from .clientSecretPickler import get_project_id
+
 def get_credentials():
     """Gets valid user credentials from storage.
     If nothing has been stored, or if the stored credentials are invalid,
@@ -19,14 +21,14 @@ def get_credentials():
     # at ~/.credentials/sheets.googleapis.com-python-quickstart.json
     SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
     CLIENT_SECRET_FILE = 'client_secret.json'
-    APPLICATION_NAME = 'sheet-output'
+    APPLICATION_NAME = get_project_id(CLIENT_SECRET_FILE)
 
     home_dir = os.path.expanduser('~')
     credential_dir = os.path.join(home_dir, '.credentials')
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     credential_path = os.path.join(credential_dir,
-                                   'sheets.googleapis.sheet-output.json')
+                                   'sheets.googleapis.{}.json'.format(APPLICATION_NAME))
 
     store = Storage(credential_path)
     credentials = store.get()
